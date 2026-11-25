@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { readStorage, writeStorage } from '@/lib/storage'
 import { useIdentity } from '@/features/identity'
 import { ChecklistContext } from '../hooks/ChecklistContext'
+import type { ItemFilter } from '../types'
 import { readLocalProgress, writeLocalProgress } from '../utils/localRepository'
 import { SupabaseProgressRepository } from '../utils/supabaseRepository'
 
@@ -15,6 +16,7 @@ interface ChecklistProviderProps {
 
 export function ChecklistProvider({ vehicle, children }: ChecklistProviderProps) {
   const { email } = useIdentity()
+  const [filter, setFilter] = useState<ItemFilter>('all')
   const [done, setDone] = useState<ReadonlySet<string>>(() => readLocalProgress(vehicle.id))
   // Which remote the current `done` has been reconciled with; loading = a remote exists and isn't reconciled yet.
   const [loadedFor, setLoadedFor] = useState<string | null>(null)
@@ -94,8 +96,10 @@ export function ChecklistProvider({ vehicle, children }: ChecklistProviderProps)
       loading,
       toggle: (itemId: string, v: boolean) => apply([itemId], v),
       setMany: apply,
+      filter,
+      setFilter,
     }),
-    [vehicle, done, loading, apply],
+    [vehicle, done, loading, apply, filter],
   )
 
   return <ChecklistContext.Provider value={value}>{children}</ChecklistContext.Provider>

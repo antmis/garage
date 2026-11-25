@@ -1,8 +1,8 @@
-import { ExternalLink, Play } from 'lucide-react'
+import { Circle, CircleCheck, ExternalLink, Play } from 'lucide-react'
 import type { MaintenanceItem, ServiceInterval } from '@/data'
 import { useMediaQuery } from '@/lib/useMediaQuery'
 import {
-  Button, Checkbox, EmptyState, Sheet, Tabs, TabsContent, TabsList, TabsTrigger, Typography, XStack, YStack,
+  Button, EmptyState, Sheet, Tabs, TabsContent, TabsList, TabsTrigger, Typography, XStack, YStack,
 } from '@/ui'
 import { resolvePartUrl, youtubeThumbnailUrl, youtubeWatchUrl } from '../utils/partLinks'
 import { ItemBadges } from './ItemBadges'
@@ -39,7 +39,7 @@ export function ItemDetailSheet({ item, interval, done, onDoneChange, onClose }:
             className="h-12 w-full gap-3 text-base"
             onClick={() => onDoneChange(!done)}
           >
-            <Checkbox checked={done} tabIndex={-1} aria-hidden className="pointer-events-none size-5" />
+            {done ? <CircleCheck className="size-5" /> : <Circle className="size-5" />}
             {done ? 'Done. Tap to undo' : 'Mark as done'}
           </Button>
 

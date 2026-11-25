@@ -57,11 +57,17 @@ const listItemVariants = cva(
         true: "cursor-pointer select-none hover:bg-accent/50 active:bg-accent/70 focus-visible:ring-ring/50 focus-visible:ring-[3px] focus-visible:ring-offset-1",
         false: "",
       },
+      /** The current item in a navigation list; pair with `aria-current`. */
+      selected: {
+        true: "bg-background shadow-[inset_3px_0_0_hsl(var(--primary))] hover:bg-background",
+        false: "",
+      },
     },
     defaultVariants: {
       size: "default",
       variant: "default",
       pressable: false,
+      selected: false,
     },
   }
 )
@@ -162,6 +168,7 @@ function ListItem({
   size,
   variant,
   pressable,
+  selected,
   title,
   subTitle,
   lineItem,
@@ -171,14 +178,27 @@ function ListItem({
   children,
   ...props
 }: ListItemProps) {
-  const Comp = asChild ? Slot : "div"
   const hasConvenienceContent = title != null || subTitle != null || lineItem != null
 
+  // Slot needs exactly one child, so with asChild the convenience slots are not rendered.
+  if (asChild) {
+    return (
+      <Slot
+        role="listitem"
+        data-slot="list-item"
+        className={cn(listItemVariants({ size, variant, pressable, selected, className }))}
+        {...props}
+      >
+        {children}
+      </Slot>
+    )
+  }
+
   return (
-    <Comp
+    <div
       role="listitem"
       data-slot="list-item"
-      className={cn(listItemVariants({ size, variant, pressable, className }))}
+      className={cn(listItemVariants({ size, variant, pressable, selected, className }))}
       {...props}
     >
       {Icon && (
@@ -205,7 +225,7 @@ function ListItem({
           <IconAfter />
         </ListItemIconAfter>
       )}
-    </Comp>
+    </div>
   )
 }
 

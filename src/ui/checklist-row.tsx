@@ -10,8 +10,10 @@ import { Typography } from "@/ui/typography"
 interface ChecklistRowProps {
   /** Row title; struck through and muted when checked. */
   title: React.ReactNode
-  /** Badges / short meta rendered under the title. */
-  meta?: React.ReactNode
+  /** Short qualifier shown inline after the title, e.g. "Hawaii only". */
+  note?: React.ReactNode
+  /** Muted text right-aligned before the arrow, e.g. a time estimate. */
+  aside?: React.ReactNode
   checked: boolean
   onCheckedChange: (checked: boolean) => void
   /** Called when the row body (not the checkbox) is pressed. */
@@ -22,33 +24,32 @@ interface ChecklistRowProps {
   openLabel: string
 }
 
-export function ChecklistRow({ title, meta, checked, onCheckedChange, onOpen, checkLabel, openLabel }: ChecklistRowProps) {
+export function ChecklistRow({
+  title, note, aside, checked, onCheckedChange, onOpen, checkLabel, openLabel,
+}: ChecklistRowProps) {
   return (
-    <ListItem size="lg" className="gap-2 px-4 py-2">
-      {/* The pseudo-element grows the hit area to ~48px without growing the visual box. */}
+    <ListItem className="gap-1 py-0 pl-4 pr-2">
+      {/* The pseudo-element grows the hit area to ~44px without growing the visual box. */}
       <Checkbox
         checked={checked}
         onCheckedChange={(v) => onCheckedChange(v === true)}
         aria-label={checkLabel}
-        className="relative size-7 rounded-lg after:absolute after:-inset-3 after:content-['']"
+        className="relative size-5 rounded-full after:absolute after:-inset-3 after:content-['']"
       />
       <Button
         variant="ghost"
         aria-label={openLabel}
         onClick={onOpen}
-        className="h-auto min-h-12 flex-1 justify-between gap-2 whitespace-normal rounded-lg px-2 py-2 text-left font-normal"
+        className="h-auto min-h-11 flex-1 justify-between gap-3 whitespace-normal rounded-md px-2 py-2 text-left font-normal"
       >
-        <span className="flex min-w-0 flex-1 flex-col gap-1">
-          <Typography
-            as="span"
-            variant="label"
-            className={cn("text-base leading-snug", checked && "text-muted-foreground line-through")}
-          >
+        <span className="min-w-0 flex-1">
+          <Typography as="span" variant="body" className={cn(checked && "text-muted-foreground line-through")}>
             {title}
           </Typography>
-          {meta && <span className="flex flex-wrap items-center gap-1.5">{meta}</span>}
+          {note && <Typography as="span" variant="small"> · {note}</Typography>}
         </span>
-        <ChevronRight className="size-5 shrink-0 text-muted-foreground" />
+        {aside && <Typography as="span" variant="small" numeric className="shrink-0">{aside}</Typography>}
+        <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
       </Button>
     </ListItem>
   )

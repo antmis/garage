@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react'
 import type { Vehicle } from '@/data'
+import type { ItemFilter } from '../types'
 
 export interface ChecklistState {
   vehicle: Vehicle
@@ -8,6 +9,9 @@ export interface ChecklistState {
   loading: boolean
   toggle: (itemId: string, done: boolean) => void
   setMany: (itemIds: string[], done: boolean) => void
+  /** Shared by the home table and every interval page, so it survives navigating between them. */
+  filter: ItemFilter
+  setFilter: (filter: ItemFilter) => void
 }
 
 export const ChecklistContext = createContext<ChecklistState | null>(null)

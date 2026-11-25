@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
-interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
+interface StackProps extends React.ComponentProps<'div'> {
   /** Tailwind spacing scale — 1 = 4px, 2 = 8px, 4 = 16px, etc. */
   gap?: number
   align?: 'start' | 'center' | 'end' | 'stretch' | 'baseline'

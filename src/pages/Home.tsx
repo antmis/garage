@@ -1,8 +1,8 @@
-import { Checklist, VehicleCard, useChecklist } from '@/features/checklist'
+import { FilterChips, IntervalTable, VehicleCard, useChecklist } from '@/features/checklist'
 import { Typography, YStack } from '@/ui'
 
 export function Home() {
-  const { vehicle } = useChecklist()
+  const { vehicle, filter, setFilter } = useChecklist()
   return (
     <YStack gap={4}>
       <VehicleCard vehicle={vehicle} />
@@ -11,7 +11,8 @@ export function Home() {
           <Typography key={i} variant="small">{n}</Typography>
         ))}
       </YStack>
-      <Checklist />
+      <FilterChips value={filter} onChange={setFilter} />
+      <IntervalTable />
     </YStack>
   )
 }

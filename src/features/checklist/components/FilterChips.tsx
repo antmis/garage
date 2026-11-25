@@ -18,7 +18,6 @@ export function FilterChips({ value, onChange }: FilterChipsProps) {
       {OPTIONS.map((o) => (
         <Button
           key={o.value}
-          size="lg"
           variant={value === o.value ? 'default' : 'outline'}
           aria-pressed={value === o.value}
           onClick={() => onChange(o.value)}
