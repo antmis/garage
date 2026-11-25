@@ -16,6 +16,10 @@ npm run lint
 
 No `.env` is needed; without one the app runs entirely on localStorage.
 
+## Truck photo
+
+Drop a photo at `public/truck.jpg` to replace the illustration on the vehicle card.
+
 ## Add an interval or item
 
 Content lives in `src/data/tacoma/`.

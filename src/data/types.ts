@@ -55,6 +55,10 @@ export interface ServiceInterval {
 export interface Vehicle {
   id: 'tacoma-2024'
   name: string
+  /** Trim line shown under the name, e.g. "TRD Off-Road". */
+  trim: string
+  /** Short spec lines shown on the vehicle card. */
+  details: string[]
   intervals: ServiceInterval[]
   /** Heading text for each conditional group, verbatim from the guide. */
   conditionHeadings: Record<Exclude<ItemGroup, 'scheduled' | 'inspect'>, string>

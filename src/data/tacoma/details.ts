@@ -38,9 +38,9 @@ export const details: Partial<Record<TaskSlug, TaskDetail>> = {
   },
   'floor-mat': {
     parts: [
+      { label: 'OE: Carpet floor mats, TRD Off Road (PT206-35249-02)', store: 'toyota', query: 'PT206-35249-02' },
       { label: 'OE: Carpet floor mats, black (PT206-35247-02)', store: 'toyota', query: 'PT206-35247-02' },
-      { label: 'OE: other trim floor mats (search)', store: 'toyota', query: 'floor mat' },
-    ],
+          ],
     time: '1 min',
     steps: [
       'Confirm the driver’s mat is the one made for this model and year.',

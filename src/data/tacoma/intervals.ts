@@ -181,6 +181,8 @@ export const intervals: ServiceInterval[] = [
 export const tacoma: Vehicle = {
   id: 'tacoma-2024',
   name: '2024 Tacoma',
+  trim: 'TRD Off-Road',
+  details: ['Double Cab, 5 ft bed', '2.4L turbo (non-hybrid), 4WD', 'Celestial Silver Metallic'],
   intervals,
   conditionHeadings: {
     dusty: 'Driving on dirt roads or dusty roads',
