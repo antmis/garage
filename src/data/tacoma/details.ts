@@ -22,19 +22,25 @@ const SHOP_STEPS = (job: string) => [
   'Keep the invoice and mileage for your service records.',
 ]
 const UNVERIFIED_DIFF =
-  'TODO: fluid type, capacity, fill/drain plug torque and the procedure are unconfirmed for the 4th gen. No 2024+ video was found (existing ones cover 2009–2023 trucks), so none are listed.'
+  'TODO: Toyota’s catalog showed no gear-oil listing for this truck, so the part link is a plain search. Confirm the spec before buying.\nTODO: fluid type, capacity, fill/drain plug torque and the procedure are unconfirmed for the 4th gen. No 2024+ video was found (existing ones cover 2009–2023 trucks), so none are listed.'
 
 export const details: Partial<Record<TaskSlug, TaskDetail>> = {
   'efi-additive': {
+    parts: [
+      { label: 'OE: Toyota EFI cleaner tank additive (00289-EFI34)', store: 'toyota', query: '00289-EFI34' },
+    ],
     steps: [
       'Skip this unless you live in Hawaii; the guide lists it as Hawaii only.',
       'Pour the Toyota EFI tank additive (or an equivalent) into the fuel tank, following the product label.',
     ],
     tools: ['Funnel (if the bottle needs one)'],
-    parts: [{ label: 'Toyota EFI fuel tank additive', store: 'amazon', query: 'Toyota genuine EFI fuel tank additive' }],
     moreNotes: 'TODO: dose and exact product unconfirmed; follow the label.',
   },
   'floor-mat': {
+    parts: [
+      { label: 'OE: Carpet floor mats, black (PT206-35247-02)', store: 'toyota', query: 'PT206-35247-02' },
+      { label: 'OE: other trim floor mats (search)', store: 'toyota', query: 'floor mat' },
+    ],
     time: '1 min',
     steps: [
       'Confirm the driver’s mat is the one made for this model and year.',
@@ -44,6 +50,11 @@ export const details: Partial<Record<TaskSlug, TaskDetail>> = {
     tools: [],
   },
   'fluid-levels': {
+    parts: [
+      { label: 'OE: Brake fluid (00475-1BF03)', store: 'toyota', query: '00475-1BF03' },
+      { label: 'OE: Windshield washer fluid concentrate (00475-00WWF)', store: 'toyota', query: '00475-00WWF' },
+      { label: 'OE: Super Long Life coolant (00272-SLLC2)', store: 'toyota', query: '00272-SLLC2' },
+    ],
     time: '10 min',
     steps: [
       'Park on level ground. Check the engine oil on the dipstick with the engine off for a few minutes.',
@@ -68,7 +79,7 @@ export const details: Partial<Record<TaskSlug, TaskDetail>> = {
       { title: '2024 Toyota Tacoma wiper blade change', youtubeId: 'Wmf8J-VW1hw', note: 'Cory’s DIY Auto' },
       { title: 'Wiper Blade Replacement 2024 Toyota Tacoma (Entire Wiper Blade)', youtubeId: '5fPyt8ojX7A', note: 'The OCD Repairman' },
     ],
-    moreNotes: 'TODO: blade lengths unconfirmed; check fitment on the parts site before buying.',
+    moreNotes: 'Blade lengths unconfirmed; the OE part numbers are from Toyota’s catalog, so use those for fit.',
   },
   'brake-visual': {
     time: '10 min',
@@ -79,10 +90,26 @@ export const details: Partial<Record<TaskSlug, TaskDetail>> = {
     ],
     tools: LIGHT,
   },
-  'engine-coolant': { steps: SHOP_STEPS('drain and refill of the engine cooling system with Toyota Super Long-Life Coolant (or an equivalent the guide describes), and an inspection of hoses and connections.'), tools: [] },
-  'intercooler-coolant': { steps: SHOP_STEPS('drain and refill of the intercooler coolant circuit, and an inspection of its hoses and connections.'), tools: [] },
+  'engine-coolant': {
+    steps: SHOP_STEPS('drain and refill of the engine cooling system with Toyota Super Long-Life Coolant (or an equivalent the guide describes), and an inspection of hoses and connections.'),
+    tools: [],
+    parts: [
+      { label: 'OE: Genuine Toyota Super Long Life Coolant (00272-SLLC2)', store: 'toyota', query: '00272-SLLC2' },
+    ],
+  },
+  'intercooler-coolant': {
+    steps: SHOP_STEPS('drain and refill of the intercooler coolant circuit, and an inspection of its hoses and connections.'),
+    tools: [],
+    parts: [
+      { label: 'OE: Genuine Toyota Super Long Life Coolant (00272-SLLC2); confirm it suits the intercooler loop', store: 'toyota', query: '00272-SLLC2' },
+    ],
+  },
   'vacuum-pump': { steps: SHOP_STEPS('inspection of the brake booster vacuum pump, with new vane and vane caps fitted if replaced (never reused).'), tools: [] },
   'spark-plugs': {
+    parts: [
+      { label: 'OE: Spark plug (90919-A1008)', store: 'toyota', query: '90919-A1008' },
+      { label: 'OE: Spark plug tube gasket (11193-F0010)', store: 'toyota', query: '11193-F0010' },
+    ],
     time: '1–2 hours',
     steps: [
       'The guide says a qualified technician should do this, and it is required under the Emissions Control Warranty.',
@@ -90,7 +117,7 @@ export const details: Partial<Record<TaskSlug, TaskDetail>> = {
     ],
     tools: ['Ratchet, extension and spark plug socket (sizes: check the video)', 'Torque wrench'],
     videos: [{ title: '2022–2025 Toyota Tacoma 2.4L (T24A-FTS): Replace Spark Plugs and Coils', youtubeId: '48B0x4eN040', note: 'Pro Tips Plus' }],
-    moreNotes: 'TODO: plug part number, gap and torque unconfirmed.',
+    moreNotes: 'Part numbers are from Toyota’s catalog for this truck; confirm quantity. TODO: gap and torque unconfirmed.',
   },
   'propeller-shaft-bolt': {},
   'atf-cooler-hoses': {
@@ -191,6 +218,9 @@ export const details: Partial<Record<TaskSlug, TaskDetail>> = {
     tools: [],
   },
   'transfer-case-oil': {
+    parts: [
+      { label: 'OE: Toyota gear oil (search; no matching listing found for this truck)', store: 'toyota', query: 'gear oil' },
+    ],
     time: '20–30 min',
     steps: [
       'Raise and support the truck safely and place a drain pan under the transfer case.',
@@ -202,6 +232,9 @@ export const details: Partial<Record<TaskSlug, TaskDetail>> = {
     moreNotes: 'TODO: fluid type, capacity and plug torque unconfirmed. Step order is general practice; follow the video.',
   },
   'front-diff-oil': {
+    parts: [
+      { label: 'OE: Toyota gear oil (search; no matching listing found for this truck)', store: 'toyota', query: 'gear oil' },
+    ],
     time: '20–30 min',
     steps: [
       'Raise and support the truck safely and place a drain pan under the front differential.',
@@ -212,6 +245,9 @@ export const details: Partial<Record<TaskSlug, TaskDetail>> = {
     moreNotes: UNVERIFIED_DIFF,
   },
   'rear-diff-oil': {
+    parts: [
+      { label: 'OE: Toyota gear oil (search; no matching listing found for this truck)', store: 'toyota', query: 'gear oil' },
+    ],
     time: '20–30 min',
     steps: [
       'Raise and support the truck safely and place a drain pan under the rear differential.',
@@ -222,6 +258,18 @@ export const details: Partial<Record<TaskSlug, TaskDetail>> = {
     moreNotes: UNVERIFIED_DIFF,
   },
   'manual-trans-oil': { steps: SHOP_STEPS('manual transmission oil replacement.'), tools: [], moreNotes: 'Only applies to manual-transmission trucks.' },
-  'trans-fluid': { steps: SHOP_STEPS('transmission fluid or oil replacement for this transmission.'), tools: [] },
-  'atf': { steps: SHOP_STEPS('automatic transmission fluid replacement (heavy idling / low-speed duty only).'), tools: [] },
+  'trans-fluid': {
+    steps: SHOP_STEPS('transmission fluid or oil replacement for this transmission.'),
+    tools: [],
+    parts: [
+      { label: 'OE: World Standard ATF (00289-ATFWS), listed as fitting this truck', store: 'toyota', query: '00289-ATFWS' },
+    ],
+  },
+  'atf': {
+    steps: SHOP_STEPS('automatic transmission fluid replacement (heavy idling / low-speed duty only).'),
+    tools: [],
+    parts: [
+      { label: 'OE: World Standard ATF (00289-ATFWS), listed as fitting this truck', store: 'toyota', query: '00289-ATFWS' },
+    ],
+  },
 }

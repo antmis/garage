@@ -44,8 +44,13 @@ export const catalog = {
   'wiper-blades': {
     name: 'Inspect wiper blades',
     kind: 'inspect',
-    parts: [{ label: 'Wiper blades (2024 Tacoma)', store: 'amazon', query: '2024 Toyota Tacoma wiper blades' }],
-    notes: 'Blades should show no cracking, splitting, wear, contamination or deformation, and should clear the windshield without streaking or skipping.',
+    parts: [
+      { label: 'OE: Front left (driver) wiper blade assembly (85222-AK010)', store: 'toyota', query: '85222-AK010' },
+      { label: 'OE: Front right (passenger) wiper blade assembly (85212-AK010)', store: 'toyota', query: '85212-AK010' },
+      { label: 'OE: Left wiper blade rubber refill (85223-AK010)', store: 'toyota', query: '85223-AK010' },
+      { label: 'Aftermarket wiper blades (2024 Tacoma)', store: 'amazon', query: '2024 Toyota Tacoma wiper blades' },
+    ],
+    notes: 'Part numbers are the ones Toyota’s catalog lists for a 2024 Tacoma; confirm fit by VIN. Blades should show no cracking, splitting, wear, contamination or deformation, and should clear the windshield without streaking or skipping.',
   },
   'rotate-tires': {
     name: 'Rotate tires',
@@ -81,6 +86,9 @@ export const catalog = {
     ],
     tools: ["Drain pan (holds 6+ qt)", "14mm socket + ratchet (drain plug)", "Oil filter wrench (Motivx MX2320-US, or 64mm 14-flute cap, verify fit)", "Torque wrench (drain plug 30 ft-lb)", "Funnel"],
     parts: [
+      { label: 'OE: Genuine Toyota oil filter (90915-YZZN1)', store: 'toyota', query: '90915-YZZN1' },
+      { label: 'OE: Oil drain plug gasket (90430-12031)', store: 'toyota', query: '90430-12031' },
+      { label: 'OE: Genuine Toyota 0W-20 motor oil, 6 qt case (00279-0WQTE-6S)', store: 'toyota', query: '00279-0WQTE-6S' },
       { label: "Oil filter: Toyota 90915-YZZN1", store: "amazon", query: "Toyota 90915-YZZN1 oil filter" },
       { label: "Drain plug gasket: Toyota 90430-12031 (replace every time, verify fit)", store: "amazon", query: "Toyota 90430-12031 drain plug gasket" },
       { label: "0W-20 full synthetic, 6 qt", store: "amazon", query: "0W-20 full synthetic motor oil API SP 6 quart" },
@@ -92,7 +100,7 @@ export const catalog = {
       { title: "Oil Change (and filter): 2026 Tacoma 2.4L (2024–2026)", youtubeId: "XUZ0QkP0zkU" },
       { title: "How to Change Oil on a 4th Gen Tacoma (2024+)", youtubeId: "WVB3BHPAxB8" },
     ],
-    notes: "Reset the oil replacement reminder (“MAINT REQD” / “OIL MAINTENANCE REQUIRED”) after service.\nUsed oil: most auto parts stores and many county transfer stations take it free. Keep a second container, since the drain is about 5.5 to 6 qt.\nTODO: values from the original prototype; verify against the full Owner’s Manual.",
+    notes: "Reset the oil replacement reminder (“MAINT REQD” / “OIL MAINTENANCE REQUIRED”) after service.\nUsed oil: most auto parts stores and many county transfer stations take it free. Keep a second container, since the drain is about 5.5 to 6 qt.\nFilter, gasket and oil part numbers are confirmed against Toyota’s catalog for a 2024 Tacoma 4WD 2.4L (which lists 0W-20). TODO: tool sizes, torque (30 ft-lb) and capacity are from the prototype; verify against the full Owner’s Manual.",
   },
   'spark-plugs': {
     name: 'Replace spark plugs',
@@ -110,6 +118,8 @@ export const catalog = {
     ],
     tools: ["Screwdriver (maybe)"],
     parts: [
+      { label: 'OE: Engine air filter (17801-YZZ11)', store: 'toyota', query: '17801-YZZ11' },
+      { label: 'OE: Engine air filter, alternate (17801-0P051)', store: 'toyota', query: '17801-0P051' },
       { label: "Amazon", store: "amazon", query: "2024 Toyota Tacoma 2.4L turbo engine air filter" },
       { label: "AutoZone", store: "autozone", query: "2024 Toyota Tacoma engine air filter" },
       { label: "RockAuto", url: "https://www.rockauto.com/" },
@@ -131,6 +141,8 @@ export const catalog = {
     ],
     tools: ["None"],
     parts: [
+      { label: 'OE: Cabin air filter (87139-YZZA8)', store: 'toyota', query: '87139-YZZA8' },
+      { label: 'OE: Cabin air filter, alternate (87139-0C010)', store: 'toyota', query: '87139-0C010' },
       { label: "Amazon", store: "amazon", query: "2024 Toyota Tacoma cabin air filter" },
       { label: "AutoZone", store: "autozone", query: "2024 Toyota Tacoma cabin air filter" },
       { label: "RockAuto", url: "https://www.rockauto.com/" },

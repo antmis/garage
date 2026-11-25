@@ -7,7 +7,7 @@ export type ItemKind = 'diy' | 'shop' | 'inspect'
  */
 export type ItemGroup = 'scheduled' | 'inspect' | 'dusty' | 'towing' | 'idling'
 
-export type PartStore = 'amazon' | 'autozone'
+export type PartStore = 'toyota' | 'amazon' | 'autozone'
 
 export type PartLink =
   | { label: string; url: string }

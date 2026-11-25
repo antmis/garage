@@ -1,6 +1,8 @@
-import type { PartLink } from '@/data'
+import type { PartLink, PartStore } from '@/data'
 
-const STORE_SEARCH: Record<'amazon' | 'autozone', (q: string) => string> = {
+const STORE_SEARCH: Record<PartStore, (q: string) => string> = {
+  // Searching a Toyota part number lands on that part; vehicle fitment is the user's own (set on the site).
+  toyota: (q) => `https://autoparts.toyota.com/search?search_query=${encodeURIComponent(q)}`,
   amazon: (q) => `https://www.amazon.com/s?k=${encodeURIComponent(q)}`,
   autozone: (q) => `https://www.autozone.com/searchresult?searchText=${encodeURIComponent(q)}`,
 }
