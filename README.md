@@ -18,7 +18,7 @@ No `.env` is needed; without one the app runs entirely on localStorage.
 
 ## Truck photo
 
-Drop a photo at `public/truck.jpg` to replace the illustration on the vehicle card.
+The vehicle card uses `public/truck.png`; replace that file to change it.
 
 ## Add an interval or item
 
