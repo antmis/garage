@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom'
-import toyotaLogo from '@/assets/toyota-logo.svg'
-import toyotaLogoDark from '@/assets/toyota-logo-dark.svg'
+import toyotaEmblem from '@/assets/toyota-emblem.svg'
 import { OverallProgress, useChecklist } from '@/features/checklist'
 import { SyncControl } from '@/features/identity'
 import { Typography, XStack, YStack } from '@/ui'
@@ -14,9 +13,7 @@ export function AppLayout() {
         <YStack gap={2} className="mx-auto max-w-3xl px-4 py-3">
           <XStack align="center" justify="between" gap={3}>
             <XStack align="center" gap={2} className="w-auto min-w-0">
-              {/* The wordmark is black, so dark mode swaps to a white-wordmark copy. */}
-              <img src={toyotaLogo} alt="Toyota" className="h-7 w-auto shrink-0 dark:hidden" />
-              <img src={toyotaLogoDark} alt="Toyota" className="hidden h-7 w-auto shrink-0 dark:block" />
+              <img src={toyotaEmblem} alt="Toyota" className="size-8 shrink-0 rounded-md" />
               <Typography as="h1" variant="heading" className="truncate">{vehicle.name}</Typography>
             </XStack>
             <XStack align="center" gap={2} className="w-auto shrink-0">
