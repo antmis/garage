@@ -44,12 +44,21 @@ export const catalog = {
   'wiper-blades': {
     name: 'Inspect wiper blades',
     kind: 'inspect',
+    parts: [{ label: 'Wiper blades (2024 Tacoma)', store: 'amazon', query: '2024 Toyota Tacoma wiper blades' }],
     notes: 'Blades should show no cracking, splitting, wear, contamination or deformation, and should clear the windshield without streaking or skipping.',
   },
   'rotate-tires': {
     name: 'Rotate tires',
     kind: 'diy',
-    notes: 'Rotate per the Owner’s Manual. While rotating, check for damage and uneven wear.',
+    time: '30–45 min',
+    steps: [
+      'Loosen the lug nuts slightly while the truck is on the ground, then jack and support it on stands.',
+      'Remove the wheels and move them to their new positions following the pattern in the Owner’s Manual.',
+      'Check each tire for damage and uneven wear while it is off.',
+      'Fit the wheels, snug the lug nuts in a star pattern, lower the truck, and torque them in a star pattern.',
+    ],
+    tools: ['Jack and jack stands', 'Lug wrench or breaker bar and socket', 'Torque wrench'],
+    notes: 'Rotate per the Owner’s Manual. While rotating, check for damage and uneven wear.\nTODO: lug nut torque and the rotation pattern are unconfirmed (the Quick Reference Guide provided doesn’t list them). Check the 4th-gen Owner’s Manual. No 4th-gen video was verified for this task.',
   },
   'brake-visual': {
     name: 'Visually inspect brake linings/drums and brake pads/discs',
@@ -59,7 +68,30 @@ export const catalog = {
   'engine-oil-and-filter': {
     name: 'Replace engine oil and oil filter',
     kind: 'diy',
-    notes: 'Reset the oil replacement reminder (“MAINT REQD” / “OIL MAINTENANCE REQUIRED”) after service.',
+    time: '30–45 min',
+    steps: [
+      'Warm the engine briefly, park on level ground, and shut it off. Let it sit a few minutes so oil drains back to the pan.',
+      'Raise and support the truck safely if you need the clearance (one video notes 4x4 trucks can do this without lifting).',
+      'Place a drain pan, remove the drain plug and let the oil drain fully. Replace the drain plug gasket if the video or your parts source calls for it.',
+      'Remove the old oil filter, wipe the mounting surface, and install the new filter per the filter’s own instructions.',
+      'Refit the drain plug, then refill through the filler cap, adding oil in stages.',
+      'Run the engine briefly, shut it off, wait, and check the dipstick. Top up to the full mark.',
+      'Reset the oil maintenance reminder on the multi-information display.',
+    ],
+    tools: ['Drain pan', 'Socket wrench and sockets (drain plug size: check the video)', 'Oil filter wrench or the filter tool the video uses', 'Funnel', 'Jack stands or ramps (if lifting)', 'Gloves and rags'],
+    parts: [
+      { label: 'Engine oil filter (2024 Tacoma 2.4L turbo)', store: 'autozone', query: '2024 Toyota Tacoma 2.4L turbo oil filter' },
+      { label: 'Engine oil (see Notes for the grade)', store: 'amazon', query: 'Toyota Tacoma 2024 2.4L engine oil' },
+      { label: 'Drain plug gasket', store: 'amazon', query: '2024 Toyota Tacoma 2.4L oil drain plug gasket' },
+    ],
+    videos: [
+      { title: 'How to Change Engine Oil on a 2024 Toyota Tacoma 2.4L Turbo (T24A-FTS)', youtubeId: 'ANvstSqG7VQ', note: 'Rat107' },
+      { title: 'How to Change Oil on a 4th Gen Tacoma (2024+)', youtubeId: 'WVB3BHPAxB8', note: 'Chloe Kuo' },
+      { title: 'DIY Your 2024+ Tacoma Oil Change', youtubeId: 'JdifGjNiMpg', note: 'Jason Explains Things' },
+      { title: 'Oil Change (and filter): 2026 Toyota Tacoma, 2.4L (2024–2026)', youtubeId: 'XUZ0QkP0zkU', note: 'Insane Oil' },
+      { title: '2024+ Tacoma Oil Change Guide', youtubeId: 'utrsluaY3Kc', note: 'Toyota Fanatics' },
+    ],
+    notes: 'Reset the oil replacement reminder (“MAINT REQD” / “OIL MAINTENANCE REQUIRED”) after service.\nTODO: oil grade, capacity, drain plug torque and filter part number unconfirmed. Web sources disagree on capacity (about 5.6–6.2 qt); the Owner’s Manual provided is only the Quick Reference Guide. Confirm in the full Owner’s Manual and fill to the dipstick.',
   },
   'spark-plugs': {
     name: 'Replace spark plugs',
@@ -69,11 +101,39 @@ export const catalog = {
   'engine-air-filter': {
     name: 'Replace engine air filter',
     kind: 'diy',
+    time: '10 min',
+    steps: [
+      'Open the hood and locate the air filter housing.',
+      'Release the housing clips or fasteners and lift the cover.',
+      'Remove the old filter, noting its orientation, and wipe out any debris in the housing.',
+      'Seat the new filter the same way, then close and secure the cover.',
+    ],
+    tools: ['Screwdriver or socket if the housing uses fasteners (check the video)'],
+    parts: [{ label: 'Engine air filter (2024 Tacoma 2.4L turbo)', store: 'amazon', query: '2024 Toyota Tacoma 2.4L turbo engine air filter' }],
+    videos: [
+      { title: '2024 Toyota Tacoma TRD Off Road 2.4L turbo air filter change', youtubeId: '1IoBZL9oVXo', note: 'Cory’s DIY Auto' },
+      { title: '2024–2026 Toyota Tacoma: Air Filter Replacement', youtubeId: '8cNiGr-wN0I', note: 'TDTVGarage' },
+    ],
+    notes: 'TODO: filter part number unconfirmed.',
   },
   'cabin-air-filter': {
     name: 'Replace cabin air filter',
     kind: 'diy',
-    notes: 'Heavy traffic, dirt roads, or urban/dusty/desert driving can shorten its life; more frequent replacement may be needed.',
+    time: '10 min',
+    steps: [
+      'Open the glove box and release it so it swings down out of the way (the videos show the exact tabs).',
+      'Open the filter cover and slide the old filter out, noting airflow direction.',
+      'Slide the new filter in with the airflow arrow oriented as before, then close the cover and glove box.',
+    ],
+    tools: ['Usually none (check the video)'],
+    parts: [{ label: 'Cabin air filter (2024 Tacoma)', store: 'amazon', query: '2024 Toyota Tacoma cabin air filter' }],
+    videos: [
+      { title: '2024–2027 4th Gen Toyota Tacoma Cabin Air Filter Replacement', youtubeId: 'ZJ_c3bX4D6Y' },
+      { title: 'Toyota Tacoma (2024–2026): Cabin Air Filter Replacement', youtubeId: 'Sx52vCiI0k8', note: 'Morozov Automotive' },
+      { title: '2024 Toyota Tacoma cabin air filter change', youtubeId: 'oYsX8vKY7CI', note: 'Cory’s DIY Auto' },
+      { title: 'Cabin Air Filter Replacement: 2026 Toyota Tacoma, 2.4L (2024–2026)', youtubeId: 'ku9cuGXDh_E', note: 'Insane Oil' },
+    ],
+    notes: 'TODO: filter part number unconfirmed. Heavy traffic, dirt roads, or urban/dusty/desert driving can shorten its life; more frequent replacement may be needed.',
   },
   'propeller-shaft-bolt': {
     name: 'Re-torque propeller shaft bolt',
