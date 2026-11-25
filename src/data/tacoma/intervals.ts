@@ -1,5 +1,6 @@
 import type { ItemGroup, MaintenanceItem, ServiceInterval, Vehicle } from '../types'
 import { catalog, type TaskDef, type TaskSlug } from './catalog'
+import { details } from './details'
 
 // Source: 2024 Toyota Tacoma Warranty & Maintenance Guide, “Maintenance Log” (pp. 38–53).
 // Every 5,000 miles / 6 months, 5k through 120k (the last interval the guide lists).
@@ -9,19 +10,20 @@ type Slugs = readonly TaskSlug[]
 
 function item(intervalId: string, group: ItemGroup, slug: TaskSlug): MaintenanceItem {
   const def: TaskDef = catalog[slug]
+  const extra = details[slug]
   const id = group === 'scheduled' || group === 'inspect' ? `${intervalId}:${slug}` : `${intervalId}:${group}:${slug}`
   return {
     id,
     name: def.name,
     kind: def.kind,
     group,
-    time: def.time,
+    time: def.time ?? extra?.time,
     condition: def.condition,
-    steps: def.steps ?? [],
-    tools: def.tools ?? [],
-    parts: def.parts ?? [],
-    videos: def.videos ?? [],
-    notes: def.notes,
+    steps: extra?.steps ?? def.steps ?? [],
+    tools: extra?.tools ?? def.tools ?? [],
+    parts: extra?.parts ?? def.parts ?? [],
+    videos: extra?.videos ?? def.videos ?? [],
+    notes: [def.notes, extra?.moreNotes].filter(Boolean).join('\n') || undefined,
   }
 }
 
