@@ -1,0 +1,8 @@
+# Minimal config so the Supabase CLI recognises this folder (`supabase link`, `supabase db push`).
+project_id = "garage"
+
+[api]
+schemas = ["public", "graphql_public"]
+
+[db]
+major_version = 17
