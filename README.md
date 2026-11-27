@@ -17,9 +17,15 @@ npm test           # vitest
 
 Needs a Supabase stack: copy `.env.example` to `.env.local` and fill it from `supabase status` (see below).
 
-## Truck photo
+## Vehicle photos
 
-The vehicle card uses `public/truck.png`; replace that file to change it.
+Each vehicle has two transparent images:
+
+- `image` in `src/data/<vehicle>/intervals.ts` (e.g. `public/truck.png`): the checklist's vehicle card and the
+  vehicle switcher.
+- A tightly cropped cutout in `public/vehicles/` for the full-screen garage picker (`/garage`). The bottom edge
+  must be the tyres, since it stands on the floor line. Map it by vehicle id in
+  `src/features/garage/components/garage-swiper/vehicleImages.ts`; a vehicle without one falls back to `image`.
 
 ## Add an interval or item
 

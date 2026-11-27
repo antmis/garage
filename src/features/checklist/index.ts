@@ -1,7 +1,6 @@
 export { ChecklistProvider } from './components/ChecklistProvider'
 export { DeviceProgressPrompt } from './components/DeviceProgressPrompt'
 export { SyncStatus } from './components/SyncStatus'
-export { useVehicleProgress } from './hooks/useVehicleProgress'
 export { FilterChips } from './components/FilterChips'
 export { IntervalDetail } from './components/IntervalDetail'
 export { IntervalNav } from './components/IntervalNav'
