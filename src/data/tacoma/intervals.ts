@@ -1,4 +1,4 @@
-import type { ItemGroup, MaintenanceItem, ServiceInterval, Vehicle } from '../types'
+import type { MaintenanceItem, ServiceInterval, Vehicle } from '../types'
 import { catalog, type TaskDef, type TaskSlug } from './catalog'
 import { details } from './details'
 
@@ -7,6 +7,9 @@ import { details } from './details'
 // The chart repeats in four shapes, built below; interval-specific extras are passed in.
 
 type Slugs = readonly TaskSlug[]
+
+/** `scheduled` and `inspect` are due for everyone; the rest only under that driving condition. */
+type ItemGroup = 'scheduled' | 'inspect' | 'dusty' | 'towing' | 'idling'
 
 function item(intervalId: string, group: ItemGroup, slug: TaskSlug): MaintenanceItem {
   const def: TaskDef = catalog[slug]
@@ -180,18 +183,30 @@ export const intervals: ServiceInterval[] = [
 
 export const tacoma: Vehicle = {
   id: 'tacoma-2024',
-  name: '2024 Tacoma',
+  vehicleType: 'truck',
+  make: 'Toyota',
+  model: 'Tacoma',
+  year: 2024,
   trim: 'TRD Off-Road',
   details: ['Double Cab, 5 ft bed', '2.4L turbo (non-hybrid), 4WD', 'Celestial Silver Metallic'],
-  intervals,
-  conditionHeadings: {
-    dusty: 'Driving on dirt roads or dusty roads',
-    towing: 'Driving while towing, using a car-top carrier, or heavy vehicle loading',
-    idling: 'Extensive idling and/or low speed driving for a long distance such as police, taxi or door-to-door delivery use',
+  image: '/truck.png',
+  schedule: {
+    intervals,
+    groups: [
+      { id: 'scheduled', heading: 'Service' },
+      { id: 'inspect', heading: 'Inspect the following' },
+      { id: 'dusty', heading: 'If driving on dirt roads or dusty roads', conditional: true },
+      { id: 'towing', heading: 'If driving while towing, using a car-top carrier, or heavy vehicle loading', conditional: true },
+      {
+        id: 'idling',
+        heading: 'If extensive idling and/or low speed driving for a long distance such as police, taxi or door-to-door delivery use',
+        conditional: true,
+      },
+    ],
+    notes: [
+      'Source: 2024 Toyota Warranty & Maintenance Guide. Service every 5,000 miles or 6 months, whichever comes first.',
+      'Special-conditions items apply only if most of your driving is under that condition. Not all vehicles are designed for towing; see the Owner’s Manual.',
+      'Heavy off-road use (deep sand, mud, water): the guide also calls for daily inspections of ball joints, brake lines, brake pads/discs, differential oil, drive shaft boots, engine air filter, chassis/body bolts, steering linkage, transfer case oil, transmission fluid, and lubricating the propeller shaft (4WD).',
+    ],
   },
-  notes: [
-    'Source: 2024 Toyota Warranty & Maintenance Guide. Service every 5,000 miles or 6 months, whichever comes first.',
-    'Special-conditions items apply only if most of your driving is under that condition. Not all vehicles are designed for towing; see the Owner’s Manual.',
-    'Heavy off-road use (deep sand, mud, water): the guide also calls for daily inspections of ball joints, brake lines, brake pads/discs, differential oil, drive shaft boots, engine air filter, chassis/body bolts, steering linkage, transfer case oil, transmission fluid, and lubricating the propeller shaft (4WD).',
-  ],
 }

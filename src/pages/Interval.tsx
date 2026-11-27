@@ -1,15 +1,15 @@
 import { Navigate, useParams } from 'react-router-dom'
-import { IntervalDetail, findIntervalByMiles, useChecklist } from '@/features/checklist'
+import { IntervalDetail, findInterval, useChecklist, vehiclePath } from '@/features/checklist'
 import { IntervalLayout } from '@/shared/layout'
 
 export function Interval() {
-  const { miles } = useParams()
-  const { vehicle } = useChecklist()
-  const interval = findIntervalByMiles(vehicle, miles)
-  if (!interval) return <Navigate to="/" replace />
+  const { interval: key } = useParams()
+  const { vehicle, schedule } = useChecklist()
+  const interval = findInterval(schedule, key)
+  if (!schedule || !interval) return <Navigate to={vehiclePath(vehicle.id)} replace />
   return (
     <IntervalLayout currentId={interval.id}>
-      <IntervalDetail interval={interval} />
+      <IntervalDetail schedule={schedule} interval={interval} />
     </IntervalLayout>
   )
 }

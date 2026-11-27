@@ -8,9 +8,10 @@ interface OverallProgressProps {
 }
 
 export function OverallProgress({ compact = false }: OverallProgressProps) {
-  const { vehicle, done, loading } = useChecklist()
+  const { schedule, done, loading } = useChecklist()
+  if (!schedule) return null
   if (loading) return <Skeleton className={compact ? 'h-4 w-20' : 'h-4 w-full'} />
-  const p = overallProgress(vehicle, done)
+  const p = overallProgress(schedule, done)
   const count = (
     <Typography variant="caption" className="whitespace-nowrap tabular-nums">
       {p.done} / {p.total} done

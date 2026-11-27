@@ -1,11 +1,15 @@
 export type ItemKind = 'diy' | 'shop' | 'inspect'
 
-/**
- * Where an item sits on the guide's chart. `scheduled` and `inspect` are due for everyone;
- * the rest only apply when the vehicle is driven primarily under that condition, so
- * they are shown but never counted toward interval progress.
- */
-export type ItemGroup = 'scheduled' | 'inspect' | 'dusty' | 'towing' | 'idling'
+/** Id of one of the schedule's `groups`; each vehicle defines its own. */
+export type ItemGroup = string
+
+export interface GroupDef {
+  id: ItemGroup
+  /** Section heading on the interval page. */
+  heading: string
+  /** Only applies under a driving condition: shown and checkable, never counted toward progress. */
+  conditional?: boolean
+}
 
 export type PartStore = 'toyota' | 'amazon' | 'autozone'
 
@@ -20,6 +24,22 @@ export interface VideoLink {
   youtubeId?: string
   url?: string
   note?: string
+}
+
+/**
+ * One task's how-to content, written once per vehicle catalog and shared by every interval that lists it.
+ * Anything unverified stays empty and is flagged in `notes` as a TODO: no guessed specs.
+ */
+export interface TaskDef {
+  name: string
+  kind: ItemKind
+  time?: string
+  condition?: string
+  steps?: string[]
+  tools?: string[]
+  parts?: PartLink[]
+  videos?: VideoLink[]
+  notes?: string
 }
 
 export interface MaintenanceItem {
@@ -42,26 +62,47 @@ export interface MaintenanceItem {
 }
 
 export interface ServiceInterval {
-  /** e.g. "30k" */
+  /** e.g. "30k". Permanent: it prefixes every item id in the interval. */
   id: string
   label: string
-  miles: number
+  /** Absent for time-only services (e.g. an annual service); the URL then uses `id`. */
+  miles?: number
   months?: number
   /** Interval-wide notes from the guide (not tied to one item). */
   notes?: string[]
   items: MaintenanceItem[]
 }
 
+export interface Schedule {
+  intervals: ServiceInterval[]
+  /** Every group the intervals use, in display order. */
+  groups: GroupDef[]
+  /** Schedule-wide notes shown above the interval table. */
+  notes: string[]
+}
+
+/**
+ * Permanent: saved progress (localStorage key, Supabase `vehicle_id`) and URLs key off it.
+ * Must not collide with a top-level route segment ("garage", "interval").
+ */
+export type VehicleId = 'tacoma-2024' | 'street-triple-675r'
+
 export interface Vehicle {
-  id: 'tacoma-2024'
-  name: string
-  /** Trim line shown under the name, e.g. "TRD Off-Road". */
+  id: VehicleId
+  /** Manufacturer, e.g. "Toyota". */
+  make: string
+  /** e.g. "Tacoma". */
+  model: string
+  /** Model year. */
+  year: number
+  /** Stored as `vehicles.vehicle_type`. */
+  vehicleType: 'car' | 'truck' | 'motorcycle' | 'other'
+  /** e.g. "TRD Off-Road". */
   trim: string
   /** Short spec lines shown on the vehicle card. */
   details: string[]
-  intervals: ServiceInterval[]
-  /** Heading text for each conditional group, verbatim from the guide. */
-  conditionHeadings: Record<Exclude<ItemGroup, 'scheduled' | 'inspect'>, string>
-  /** Guide-wide notes shown above the list. */
-  notes: string[]
+  /** Photo or logo, served from /public. */
+  image: string
+  /** Absent until the schedule is written; the vehicle still lists, with a "coming soon" state. */
+  schedule?: Schedule
 }

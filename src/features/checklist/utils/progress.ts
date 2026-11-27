@@ -1,23 +1,23 @@
-import type { MaintenanceItem, ServiceInterval, Vehicle } from '@/data'
+import type { MaintenanceItem, Schedule, ServiceInterval } from '@/data'
 import type { ItemFilter, Progress } from '../types'
 
 /**
- * Only unconditional items count toward progress. Special-condition items and
- * region-specific ones (e.g. Hawaii-only) stay checkable but never gate “done”.
+ * Only unconditional items count toward progress. Items in a conditional group (special driving
+ * conditions) and items with their own condition (e.g. Hawaii-only) stay checkable but never gate “done”.
  */
-export function isCounted(item: MaintenanceItem): boolean {
-  return (item.group === 'scheduled' || item.group === 'inspect') && !item.condition
+export function isCounted(schedule: Schedule, item: MaintenanceItem): boolean {
+  return !item.condition && !schedule.groups.find((g) => g.id === item.group)?.conditional
 }
 
-export function intervalProgress(interval: ServiceInterval, done: ReadonlySet<string>): Progress {
-  const counted = interval.items.filter(isCounted)
+export function intervalProgress(schedule: Schedule, interval: ServiceInterval, done: ReadonlySet<string>): Progress {
+  const counted = interval.items.filter((i) => isCounted(schedule, i))
   return { total: counted.length, done: counted.filter((i) => done.has(i.id)).length }
 }
 
-export function overallProgress(vehicle: Vehicle, done: ReadonlySet<string>): Progress {
-  return vehicle.intervals.reduce<Progress>(
+export function overallProgress(schedule: Schedule, done: ReadonlySet<string>): Progress {
+  return schedule.intervals.reduce<Progress>(
     (acc, iv) => {
-      const p = intervalProgress(iv, done)
+      const p = intervalProgress(schedule, iv, done)
       return { done: acc.done + p.done, total: acc.total + p.total }
     },
     { done: 0, total: 0 },

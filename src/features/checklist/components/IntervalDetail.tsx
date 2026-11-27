@@ -1,30 +1,31 @@
 import { useRef, useState } from 'react'
 import { RotateCcw } from 'lucide-react'
-import type { ItemGroup, ServiceInterval } from '@/data'
+import type { Schedule, ServiceInterval } from '@/data'
 import { useStickyOffset } from '@/lib/useStickyOffset'
 import { Button, ChecklistRow, ConfirmDialog, ListGroup, Progress, Skeleton, Typography, XStack, YStack } from '@/ui'
 import { useChecklist } from '../hooks/ChecklistContext'
-import { shortTime } from '../utils/format'
+import { intervalTiming, intervalTitle, shortTime } from '../utils/format'
 import { intervalProgress, matchesFilter, percent } from '../utils/progress'
 import { FilterChips } from './FilterChips'
 import { ItemDetailSheet } from './ItemDetailSheet'
 
-const GROUP_ORDER: ItemGroup[] = ['scheduled', 'inspect', 'dusty', 'towing', 'idling']
-
 interface IntervalDetailProps {
+  /** The vehicle's schedule; supplies the group order and headings. */
+  schedule: Schedule
   interval: ServiceInterval
 }
 
 /** Body of an interval page: header, filter and the grouped task rows. Same component for every interval. */
-export function IntervalDetail({ interval }: IntervalDetailProps) {
-  const { vehicle, done, loading, toggle, setMany, filter, setFilter } = useChecklist()
+export function IntervalDetail({ schedule, interval }: IntervalDetailProps) {
+  const { done, loading, toggle, setMany, filter, setFilter } = useChecklist()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   // Group headings stick right below this pinned header, so they need its height.
   const headerRef = useRef<HTMLDivElement>(null)
   useStickyOffset(headerRef, '--interval-header-h')
 
-  const progress = intervalProgress(interval, done)
+  const progress = intervalProgress(schedule, interval, done)
+  const timing = intervalTiming(interval)
   const complete = progress.total > 0 && progress.done === progress.total
   const visible = interval.items.filter((i) => matchesFilter(i, done, filter))
   const checkedIds = interval.items.filter((i) => done.has(i.id)).map((i) => i.id)
@@ -40,10 +41,10 @@ export function IntervalDetail({ interval }: IntervalDetailProps) {
       >
         <XStack align="baseline" gap={2} wrap className="min-w-0">
           <Typography as="h1" variant="heading" className="text-2xl">
-            {interval.miles.toLocaleString('en-US')} miles
+            {intervalTitle(interval)}
           </Typography>
           <Typography as="span" variant="muted">
-            or {interval.months} months ·{' '}
+            {timing && `${timing} · `}
             <Typography as="span" numeric color={complete ? 'success' : 'muted'}>
               {progress.done} / {progress.total} done
             </Typography>
@@ -68,16 +69,12 @@ export function IntervalDetail({ interval }: IntervalDetailProps) {
             <Typography variant="muted" className="py-6 text-center">Nothing to show with this filter.</Typography>
           )}
 
-          {GROUP_ORDER.map((group) => {
-            const items = visible.filter((i) => i.group === group)
+          {schedule.groups.map(({ id, heading }) => {
+            const items = visible.filter((i) => i.group === id)
             if (items.length === 0) return null
-            const heading =
-              group === 'scheduled' ? 'Service'
-                : group === 'inspect' ? 'Inspect the following'
-                  : `If ${vehicle.conditionHeadings[group].charAt(0).toLowerCase()}${vehicle.conditionHeadings[group].slice(1)}`
             return (
               // overflow-clip, not hidden: hidden makes a scroll container and the heading would stop sticking.
-              <section key={group} className="overflow-clip rounded-xl border bg-card">
+              <section key={id} className="overflow-clip rounded-xl border bg-card">
                 {/* Pins 1px down, where it already sits below the card's top border, so it pins with no scroll.
                     The top shadow fills that 1px once the border has scrolled away. */}
                 <Typography

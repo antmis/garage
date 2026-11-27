@@ -10,15 +10,14 @@ export interface IntervalSummary {
   complete: boolean
 }
 
-/** One entry per interval with its progress: the data behind the home table, sidebar and strip. */
+/** One entry per interval with its progress: the data behind the home table and sidebar. Empty without a schedule. */
 export function useIntervalSummaries(): IntervalSummary[] {
-  const { vehicle, done } = useChecklist()
-  return useMemo(
-    () =>
-      vehicle.intervals.map((interval) => {
-        const progress = intervalProgress(interval, done)
-        return { interval, progress, complete: progress.total > 0 && progress.done === progress.total }
-      }),
-    [vehicle, done],
-  )
+  const { schedule, done } = useChecklist()
+  return useMemo(() => {
+    if (!schedule) return []
+    return schedule.intervals.map((interval) => {
+      const progress = intervalProgress(schedule, interval, done)
+      return { interval, progress, complete: progress.total > 0 && progress.done === progress.total }
+    })
+  }, [schedule, done])
 }

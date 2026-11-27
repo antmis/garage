@@ -2,9 +2,10 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ChevronLeft, Menu } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import garageLogo from '@/assets/garage-logo.svg'
-import { IntervalNav, OverallProgress, useChecklist } from '@/features/checklist'
+import { IntervalNav, OverallProgress, SyncStatus, useChecklist, vehiclePath } from '@/features/checklist'
+import { VehicleSwitcher } from '@/features/garage'
 import { useStickyOffset } from '@/lib/useStickyOffset'
-import { Button, ScrollArea, Sheet, Typography, XStack, YStack } from '@/ui'
+import { Button, ScrollArea, Sheet, XStack, YStack } from '@/ui'
 import { ThemeToggle } from './ThemeToggle'
 
 interface IntervalLayoutProps {
@@ -13,7 +14,7 @@ interface IntervalLayoutProps {
   children: ReactNode
 }
 
-/** Back link, brand, overall count, interval menu and actions. */
+/** Back link, brand, vehicle switcher, overall count, interval menu and actions. */
 function IntervalSidebar({ currentId }: Pick<IntervalLayoutProps, 'currentId'>) {
   const { vehicle } = useChecklist()
   return (
@@ -21,17 +22,18 @@ function IntervalSidebar({ currentId }: Pick<IntervalLayoutProps, 'currentId'>) 
       <YStack gap={1} className="border-b px-3 py-3">
         <XStack align="center" gap={2}>
           <Button asChild variant="ghost" size="icon">
-            <Link to="/" aria-label="All intervals"><ChevronLeft /></Link>
+            <Link to={vehiclePath(vehicle.id)} aria-label="All intervals"><ChevronLeft /></Link>
           </Button>
           <img src={garageLogo} alt="Garage" className="size-7 shrink-0" />
-          <Typography variant="heading" className="truncate text-lg">{vehicle.name}</Typography>
+          <VehicleSwitcher vehicle={vehicle} compact />
         </XStack>
         <div className="px-1"><OverallProgress compact /></div>
       </YStack>
       <ScrollArea className="min-h-0 flex-1">
         <IntervalNav currentId={currentId} />
       </ScrollArea>
-      <XStack justify="end" className="border-t px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <XStack justify="end" align="center" gap={1} className="border-t px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <SyncStatus />
         <ThemeToggle />
       </XStack>
     </div>
@@ -70,7 +72,7 @@ export function IntervalLayout({ currentId, children }: IntervalLayoutProps) {
                 <Menu />
               </Button>
               <img src={garageLogo} alt="Garage" className="size-7 shrink-0" />
-              <Typography variant="heading" className="truncate text-lg">{vehicle.name}</Typography>
+              <VehicleSwitcher vehicle={vehicle} compact />
             </XStack>
             <div className="pr-2"><OverallProgress compact /></div>
           </XStack>

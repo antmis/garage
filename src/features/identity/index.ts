@@ -1,2 +1,5 @@
+export { AccountDialog } from './components/AccountDialog'
 export { IdentityProvider } from './components/IdentityProvider'
+export { NewPasswordDialog } from './components/NewPasswordDialog'
 export { useIdentity } from './hooks/IdentityContext'
+export type { AuthStatus } from './hooks/IdentityContext'

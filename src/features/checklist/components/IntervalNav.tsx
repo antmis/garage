@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ListItem, Progress, Typography, XStack, YStack } from '@/ui'
+import { useChecklist } from '../hooks/ChecklistContext'
 import { useIntervalSummaries } from '../hooks/useIntervalSummaries'
+import { intervalShortTitle, intervalTiming } from '../utils/format'
 import { percent } from '../utils/progress'
 import { intervalPath } from '../utils/routes'
 
@@ -12,6 +14,7 @@ interface IntervalNavProps {
 
 /** Interval-to-interval menu: the body of the interval sidebar on desktop and in the mobile sheet. */
 export function IntervalNav({ currentId }: IntervalNavProps) {
+  const { vehicle } = useChecklist()
   const summaries = useIntervalSummaries()
   const currentRef = useRef<HTMLAnchorElement>(null)
 
@@ -24,17 +27,18 @@ export function IntervalNav({ currentId }: IntervalNavProps) {
     <nav aria-label="Intervals" className="flex flex-col">
       {summaries.map(({ interval, progress, complete }) => {
         const current = interval.id === currentId
+        const timing = intervalTiming(interval)
         return (
           // `role={undefined}` drops ListItem's listitem role so the link keeps its own.
           <ListItem key={interval.id} asChild pressable selected={current} role={undefined} className="px-4">
-            <Link ref={current ? currentRef : undefined} to={intervalPath(interval)} aria-current={current ? 'page' : undefined}>
+            <Link ref={current ? currentRef : undefined} to={intervalPath(vehicle.id, interval)} aria-current={current ? 'page' : undefined}>
               <YStack gap={2}>
                 <XStack align="start" justify="between" gap={2}>
                   <YStack gap={0.5} className="w-auto">
                     <Typography as="span" variant="amount" className="text-base">
-                      {interval.miles.toLocaleString('en-US')} mi
+                      {intervalShortTitle(interval)}{interval.miles !== undefined && ' mi'}
                     </Typography>
-                    <Typography as="span" variant="small">or {interval.months} months</Typography>
+                    {timing && <Typography as="span" variant="small">{timing}</Typography>}
                   </YStack>
                   <Typography as="span" variant="caption" numeric color={complete ? 'success' : 'muted'}>
                     {progress.done}/{progress.total}

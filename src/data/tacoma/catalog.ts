@@ -1,21 +1,8 @@
-import type { ItemKind, PartLink, VideoLink } from '../types'
+import type { TaskDef } from '../types'
 
-/**
- * One task's how-to content, written once and shared by every interval that lists it.
- * Intervals (./intervals.ts) decide what is due when; this file decides what each task *is*.
- * Anything unverified stays empty and is flagged in `notes` as a TODO: no guessed specs.
- */
-export interface TaskDef {
-  name: string
-  kind: ItemKind
-  time?: string
-  condition?: string
-  steps?: string[]
-  tools?: string[]
-  parts?: PartLink[]
-  videos?: VideoLink[]
-  notes?: string
-}
+export type { TaskDef }
+
+// Intervals (./intervals.ts) decide what is due when; this file decides what each task *is*.
 
 const FLUIDS_NOTE =
   'Inspect sealed transmissions, transfer cases and differentials for signs of leakage. If leakage from a sealed component is suspected, have it inspected by a Toyota dealer. Inspect power steering fluid (if equipped) and brake fluid level/condition. Inspect all cooling systems (if equipped): coolant level/condition/freezing point.'

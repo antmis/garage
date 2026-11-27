@@ -1,2 +1,2 @@
-export { AppLayout } from './AppLayout'
+export { AppLayout, VehicleLayout } from './AppLayout'
 export { IntervalLayout } from './IntervalLayout'

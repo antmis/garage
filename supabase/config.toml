@@ -1,4 +1,4 @@
-# Minimal config so the Supabase CLI recognises this folder (`supabase link`, `supabase db push`).
+# Local stack config (`supabase start`). Hosted settings are set in the dashboard; keep the two in step.
 project_id = "garage"
 
 [api]
@@ -6,3 +6,21 @@ schemas = ["public", "graphql_public"]
 
 [db]
 major_version = 17
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+# The confirmation link returns to whichever port the dev server got.
+additional_redirect_urls = ["http://localhost:*"]
+enable_signup = true
+# Match the sign-up form (minLength 8). Hosted: Authentication > Sign In / Providers > Email.
+minimum_password_length = 8
+
+[auth.email]
+enabled = true
+# On, here and hosted: sign-up emails a confirmation link (locally it lands in Mailpit, http://localhost:54324).
+enable_confirmations = true
+
+[functions.vehicle-data]
+# The platform check stays on; the function also verifies the caller with getClaims().
+verify_jwt = true

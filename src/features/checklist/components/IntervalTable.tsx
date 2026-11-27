@@ -5,12 +5,13 @@ import {
 } from '@/ui'
 import { useChecklist } from '../hooks/ChecklistContext'
 import { useIntervalSummaries } from '../hooks/useIntervalSummaries'
+import { intervalShortTitle } from '../utils/format'
 import { matchesFilter, percent } from '../utils/progress'
 import { intervalPath } from '../utils/routes'
 
 /** Home view: one dense row per interval, each row a link to its interval page. */
 export function IntervalTable() {
-  const { done, filter, loading } = useChecklist()
+  const { vehicle, done, filter, loading } = useChecklist()
   const summaries = useIntervalSummaries()
 
   if (loading) {
@@ -45,16 +46,16 @@ export function IntervalTable() {
             <TableRow key={interval.id} className="relative">
               <TableCell className="py-3 pl-4">
                 <Link
-                  to={intervalPath(interval)}
+                  to={intervalPath(vehicle.id, interval)}
                   aria-label={`${interval.label}, ${progress.done} of ${progress.total} done`}
                   className="rounded-sm outline-none after:absolute after:inset-0 after:z-10 focus-visible:ring-[3px] focus-visible:ring-ring/50"
                 >
                   <Typography as="span" variant="amount" className="text-base">
-                    {interval.miles.toLocaleString('en-US')}
+                    {intervalShortTitle(interval)}
                   </Typography>
                 </Link>
               </TableCell>
-              <TableCell><Typography as="span" variant="muted">{interval.months} mo</Typography></TableCell>
+              <TableCell><Typography as="span" variant="muted">{interval.months !== undefined ? `${interval.months} mo` : '—'}</Typography></TableCell>
               <TableCell>
                 <Typography as="span" variant="body" numeric color={complete ? 'success' : 'muted'}>
                   {progress.done}/{progress.total}

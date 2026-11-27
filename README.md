@@ -2,8 +2,8 @@
 
 A maintenance checklist for one vehicle: a 2024 Toyota Tacoma (2.4L turbo). Every service interval from the
 Toyota Warranty & Maintenance Guide (5,000 to 120,000 miles), grouped by interval. Tap a checkbox to mark it done,
-tap the row for how-to, tools, parts and videos. Progress is stored in the browser and can optionally sync to
-Supabase by typing an email.
+tap the row for how-to, tools, parts and videos. Progress saves on the device, or in your account if you create
+one, which syncs it between devices.
 
 ## Run locally
 
@@ -12,9 +12,10 @@ npm install
 npm run dev        # http://localhost:5173 (honors PORT)
 npm run build      # tsc -b && vite build
 npm run lint
+npm test           # vitest
 ```
 
-No `.env` is needed; without one the app runs entirely on localStorage.
+Needs a Supabase stack: copy `.env.example` to `.env.local` and fill it from `supabase status` (see below).
 
 ## Truck photo
 
@@ -33,22 +34,38 @@ Content lives in `src/data/tacoma/`.
   `features/checklist/utils/partLinks.ts`.
 - A second vehicle (e.g. Street Triple) is another folder under `src/data/<vehicle>/`.
 
-## Supabase sync (optional)
+## Supabase
 
-1. Create a Supabase project, then:
+No account needed: progress saves on the device. Creating one (email and password, confirmed by an emailed link)
+moves that progress into Supabase and syncs it across devices. Progress lives in Postgres (RLS on every table). TanStack Query
+caches it in localStorage for first paint, and checklist changes made offline are sent once the device reconnects.
+
+Local stack (needs a Docker runtime, e.g. `brew install colima docker && colima start`):
 
 ```bash
-npx supabase login
-npx supabase link --project-ref <your-project-ref>
-npx supabase db push
+supabase start                 # prints API URL + publishable key → .env.local
+supabase db reset              # applies supabase/migrations
+npm run db:types               # regenerates src/lib/database.types.ts
+supabase functions serve       # vehicle-data Edge Function
+npm run test:rls               # two users; proves A can't read or write B's rows
 ```
 
-2. Copy `.env.example` to `.env.local` and set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+Confirmation emails sent locally land in Mailpit at http://localhost:54324.
 
-The table is protected by intentionally open, temporary RLS policies and identified by an unverified email. Replace
-with Supabase Auth later (see the comments in the migration and `supabaseRepository.ts`).
+Hosted: `supabase link --project-ref <ref>`, `supabase db push`, `supabase functions deploy vehicle-data`. In the
+dashboard:
+
+- Authentication > Sign In / Providers > Email: keep **Confirm email** on; minimum password length 8.
+- Authentication > URL Configuration: **Site URL** = the deployed app's URL. **Redirect URLs**: the deployed URL
+  with `/**` and `http://localhost:5173/**`, so confirmation and reset links can return to either.
+
+Supabase's built-in email sender only delivers to members of your Supabase organization, a few per hour. That
+covers your own account; add custom SMTP (e.g. Resend) under Authentication > Emails before anyone else signs up.
+Forgot a password? Use "Forgot password?" in the sign-in dialog.
+
+Vehicle data (VIN decode, recalls) goes through the `vehicle-data` Edge Function. See `docs/adding-a-provider.md`.
 
 ## Deploy to Vercel (later)
 
-Import the repo, framework preset Vite, add the two `VITE_SUPABASE_*` env vars, and deploy. `vercel.json` already
-rewrites all routes to `index.html` for the SPA.
+Import the repo, framework preset Vite, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`, and deploy.
+`vercel.json` already rewrites all routes to `index.html` for the SPA.
