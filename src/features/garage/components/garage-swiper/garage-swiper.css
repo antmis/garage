@@ -1,0 +1,292 @@
+/* Garage swiper scene. Plain CSS because the layered gradients, perspective and filters don't fit utility classes.
+   Only transform and opacity animate; every blur here is static except the neighbour slides' depth blur. */
+
+.gs-root {
+  /* One slide's share of the stage, and where the wall meets the floor and the tyres meet the floor. Narrow
+     portrait screens override all three (bottom of file) so the vehicle is large and sits mid-screen. */
+  --gs-slide: 56%;
+  --gs-horizon: 58%;
+  --gs-contact: 77%;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  height: 100dvh;
+  overflow: hidden;
+  background: #17181a;
+  color: #d3d5da;
+  overscroll-behavior: contain;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gs-stage {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+}
+.gs-root[data-dragging] .gs-stage { cursor: grabbing; }
+.gs-stage:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 18px;
+  box-shadow: inset 0 0 0 2px #dfe8ff;
+  opacity: .7;
+  pointer-events: none;
+}
+
+.gs-scene {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% var(--gs-contact);
+  transition: transform .5s cubic-bezier(.4, 0, .2, 1);
+}
+.gs-root[data-selecting] .gs-scene { transform: scale(1.15); }
+
+/* ---- Backdrop ------------------------------------------------------------------------------------------- */
+
+.gs-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.gs-wall {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  height: calc(var(--gs-horizon) + 20px);
+  background: linear-gradient(#17181b, #2c2e33);
+  filter: blur(8px);
+}
+
+/* Panning layers overhang far past both edges: the shift reaches about ±(BACKDROP_PERIOD + a drag's worth). */
+.gs-pan {
+  position: absolute;
+  top: 0;
+  left: -1400px;
+  right: -1400px;
+  height: var(--gs-horizon);
+}
+.gs-pan,
+.gs-floor-plane { transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
+.gs-root[data-dragging] .gs-pan,
+.gs-root[data-dragging] .gs-floor-plane { transition: none; will-change: transform; }
+.gs-root[data-rewrapping] .gs-pan,
+.gs-root[data-rewrapping] .gs-floor-plane { transition: none; }
+
+/* Periods must divide BACKDROP_PERIOD (440px). */
+.gs-wall-ribs {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .05) 0 4px, transparent 4px 110px);
+  filter: blur(3px);
+}
+.gs-lights {
+  position: absolute;
+  top: 5%;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: repeating-linear-gradient(90deg, transparent 0 70px, #dfe8ff 70px 370px, transparent 370px 440px);
+  filter: blur(12px);
+  opacity: .8;
+}
+.gs-glow {
+  position: absolute;
+  left: 30%;
+  width: 40%;
+  top: calc(var(--gs-horizon) * .38);
+  height: calc(var(--gs-horizon) * .8);
+  border-radius: 50%;
+  background: #8fa6c8;
+  filter: blur(80px);
+  opacity: .3;
+}
+
+.gs-floor {
+  position: absolute;
+  top: var(--gs-horizon);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  perspective: 620px;
+  perspective-origin: 50% 0;
+}
+/* Kept under ~660px tall: with this perspective and tilt, anything deeper crosses behind the viewer.
+   Its transform (tilt, then the parallax shift along the floor) is set inline. */
+.gs-floor-plane {
+  position: absolute;
+  top: 0;
+  left: -2400px;
+  right: -2400px;
+  height: 640px;
+  transform-origin: 50% 0;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .08) 0 2px, transparent 2px 220px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .08) 0 2px, transparent 2px 220px),
+    linear-gradient(#35373c, #18191c);
+  filter: blur(3px);
+}
+.gs-floor-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 40% 60% at 50% 0, rgba(159, 180, 214, .22), transparent 70%);
+}
+.gs-haze {
+  position: absolute;
+  left: -20px;
+  right: -20px;
+  top: calc(var(--gs-horizon) - 5%);
+  height: 10%;
+  background: linear-gradient(transparent, rgba(20, 21, 24, .7) 50%, transparent);
+  filter: blur(10px);
+}
+
+.gs-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(0, 0, 0, .65) 100%);
+}
+
+/* ---- Vehicles ------------------------------------------------------------------------------------------- */
+
+/* Bottom edge is the contact line. */
+.gs-track {
+  position: absolute;
+  top: 0;
+  left: calc((100% - var(--gs-slide)) / 2);
+  width: var(--gs-slide);
+  height: var(--gs-contact);
+  transition: transform .6s cubic-bezier(.2, .8, .2, 1);
+}
+.gs-root[data-dragging] .gs-track { transition: none; will-change: transform; }
+
+.gs-slide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  transform-origin: 50% 100%;
+  transition: transform .6s cubic-bezier(.2, .8, .2, 1), opacity .6s cubic-bezier(.2, .8, .2, 1),
+    filter .6s cubic-bezier(.2, .8, .2, 1);
+}
+.gs-root[data-dragging] .gs-slide { transition: none; }
+
+/* Same width for every vehicle type, capped by height so a very wide window doesn't push the roof off-stage. */
+.gs-vehicle {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(90%, calc(62dvh * var(--gs-ratio)));
+  transform: translateX(-50%);
+}
+.gs-photo,
+.gs-reflection {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+.gs-photo { position: relative; }
+/* Masked in the image's own (unflipped) space, so "to top" fades away from the tyres after the flip. */
+.gs-reflection {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  transform: scaleY(-1);
+  opacity: .2;
+  filter: blur(2px);
+  -webkit-mask-image: linear-gradient(to top, #000, transparent 42%);
+  mask-image: linear-gradient(to top, #000, transparent 42%);
+}
+.gs-shadow {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: -4%;
+  height: 10%;
+  border-radius: 50%;
+  background: #000;
+  filter: blur(18px);
+  opacity: .75;
+}
+.gs-placeholder {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 60%;
+  aspect-ratio: 16 / 9;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, .03);
+  color: #4a4d54;
+}
+.gs-placeholder svg { width: 25%; height: auto; }
+
+/* ---- UI ------------------------------------------------------------------------------------------------- */
+
+.gs-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: max(5%, calc(env(safe-area-inset-bottom) + 16px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.gs-root[data-selecting] .gs-caption,
+.gs-root[data-selecting] .gs-chevron { opacity: 0; }
+.gs-name {
+  font-size: 15px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: #d3d5da;
+}
+.gs-trim { font-size: 12px; color: #9a9da4; }
+.gs-dots { display: flex; gap: 6px; margin-top: 10px; }
+.gs-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, .22);
+  transition: width .3s ease, background-color .3s ease;
+}
+.gs-dot.is-active { width: 22px; background: #dfe8ff; }
+
+.gs-chevron.gs-chevron {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  color: #fff;
+  opacity: .3;
+  transition: opacity .2s ease;
+}
+.gs-chevron.gs-chevron:hover { background: rgba(255, 255, 255, .06); color: #fff; opacity: .6; }
+
+@media (max-width: 640px) and (orientation: portrait) {
+  .gs-root { --gs-slide: 84%; --gs-horizon: 48%; --gs-contact: 64%; }
+}
+
+/* ---- Reduced motion: no parallax, zoom or depth blur; slides crossfade into place. -------------------- */
+
+.gs-root[data-reduced-motion] .gs-scene,
+.gs-root[data-reduced-motion] .gs-pan,
+.gs-root[data-reduced-motion] .gs-floor-plane,
+.gs-root[data-reduced-motion] .gs-track { transition: none; }
+.gs-root[data-reduced-motion][data-selecting] .gs-scene { transform: none; }
+.gs-root[data-reduced-motion] .gs-slide { transition: opacity .25s linear; }
